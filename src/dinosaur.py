@@ -24,14 +24,20 @@ class Dinosaur:
     self.Img = dinosaurImage[0]
     self.dinoRect = self.Img.get_rect()
 
-    self.yvelocity = 0
+    self.yvelocity = 8.5
     self.height = DINOHEIGHT
     self.width = DINOWIDTH
     self.surfaceHeight = surfaceHeight
 
   def jump(self):
-    if(self.y == 0):
-      self.yvelocity = 300
+    self.Img = self.jumping
+
+    if(self.jumpBool):
+      self.dinoRect.y -= self.yvelocity * 4
+      self.yvelocity -= 0.8
+    if self.yvelocity < -8.5:
+      self.jumpBool = False
+      self.yvelocity = 8.5
 
   def duckFunc(self):
     self.Img = self.duckImg[self.stepIndex // 5]
