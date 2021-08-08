@@ -4,37 +4,56 @@ DINOHEIGHT = 40
 DINOWIDTH = 20
 
 #Images
-dinosaurImage = pygame.image.load('./Assets/Dino/DinoRun1.png')
+dinosaurImage = [pygame.image.load('./Assets/Dino/DinoRun1.png'),pygame.image.load('./Assets/Dino/DinoRun2.png')]
 jumpImg = pygame.image.load('./Assets/Dino/DinoJump.png')
-duckImg = pygame.image.load('./Assets/Dino/DinoDuck1.png')
+duckImg = [pygame.image.load('./Assets/Dino/DinoDuck1.png'),pygame.image.load('./Assets/Dino/DinoDuck2.png')]
 class Dinosaur:
   def __init__(self, surfaceHeight):
-    self.x = 60
-    self.y = 0
+    self.x = 10
+    self.y = 295
+    self.yDuck = 325
 
     self.duckImg = duckImg
     self.jumping = jumpImg
+    self.RunImg = dinosaurImage
 
+    self.stepIndex = 0
     self.duck = False
     self.jumpBool = False
     self.run = True
-    self.Img = dinosaurImage
-
+    self.Img = dinosaurImage[0]
+    self.dinoRect = self.Img.get_rect()
 
     self.yvelocity = 0
     self.height = DINOHEIGHT
     self.width = DINOWIDTH
     self.surfaceHeight = surfaceHeight
+
   def jump(self):
     if(self.y == 0):
       self.yvelocity = 300
+
+  def duckFunc(self):
+    self.Img = self.duckImg[self.stepIndex // 5]
+    self.dinoRect = self.Img.get_rect()
+    self.dinoRect.x = self.x
+    self.dinoRect.y = self.yDuck
+    self.stepIndex += 1
+
+  def runFunc(self):
+    self.Img = self.RunImg[self.stepIndex//5]
+    self.dinoRect = self.Img.get_rect()
+    self.dinoRect.x = self.x
+    self.dinoRect.y = self.y
+    self.stepIndex += 1
+
   def update(self, userInput):
     if self.jumpBool:
       self.jump()
     if self.duck:
-      self.duck()
+      self.duckFunc()
     if self.run:
-      self.run()
+      self.runFunc()
     if userInput[pygame.K_SPACE] and not self.jumpBool:
       self.duck = False
       self.jumpBool = True
@@ -47,6 +66,8 @@ class Dinosaur:
       self.duck = False
       self.jumpBool = False
       self.run = True
+    if self.stepIndex >= 10:
+      self.stepIndex = 0
 
   def draw(self,display):
-    pygame.draw.rect(display,dinocolour,[self.x,self.surfaceHeight-self.y-self.height,self.width,self.height])
+    display.blit(self.Img,(self.dinoRect.x,self.dinoRect.y))

@@ -20,20 +20,17 @@ grey = 169, 169, 169
 black = 0, 0, 0
 white = 255, 255, 255
 
+clock = pygame.time.Clock()
 while True:
-    curr_t = pygame.time.get_ticks()
-    timeChange = (curr_t-lastFrame)/1000.0
-    lastFrame = curr_t
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             quit()
-        if event.type == pygame.KEYDOWN: #If keyboard used
-            if event.type == pygame.K_SPACE:
-                Dinosaur.jump()
 
     display.fill(white)
-    dinosaur.update(timeChange)
+    userInput = pygame.key.get_pressed()
     dinosaur.draw(display)
+    dinosaur.update(userInput)
+    clock.tick(30)
     pygame.draw.rect(display, black, [0, groundHeight, width, 20])
     pygame.display.update()
