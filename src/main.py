@@ -1,6 +1,6 @@
 import pygame, random
 from dinosaur import Dinosaur
-from obstacle import Obstacle
+import tkinter.messagebox
 from Cactus import Cactus
 from bird import Bird
 from points import points as pointFunc
@@ -26,6 +26,9 @@ white = 255, 255, 255
 
 clock = pygame.time.Clock()
 obstacles = []
+
+root = tkinter.Tk()
+root.withdraw()
 def main():
     score = 0
     gameSpeed = 15
@@ -53,7 +56,6 @@ def main():
             obstacle.update(gameSpeed,obstacles)
             if dinosaur.dinoRect.colliderect(obstacle.imageRect):
                 main()
-
 
         score = pointFunc(score, gameSpeed)[0]
         font = pygame.font.SysFont(None, 24)
