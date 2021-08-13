@@ -26,10 +26,11 @@ white = 255, 255, 255
 
 clock = pygame.time.Clock()
 obstacles = []
+highScore = 0
 
 root = tkinter.Tk()
 root.withdraw()
-def main():
+def main(highScore):
     score = 0
     gameSpeed = 15
     while True:
@@ -55,7 +56,9 @@ def main():
             obstacle.draw(display)
             obstacle.update(gameSpeed,obstacles)
             if dinosaur.dinoRect.colliderect(obstacle.imageRect):
-                main()
+                if score > highScore:
+                    highScore = score
+                main(highScore)
 
         score = pointFunc(score, gameSpeed)[0]
         font = pygame.font.SysFont(None, 24)
@@ -63,10 +66,14 @@ def main():
         scoreRect = scoreReader.get_rect()
         scoreRect.center = (550, 40)
         display.blit(scoreReader, scoreRect)
+        highScoreReader = font.render(f"High: {highScore}", True, (0, 0, 0))
+        highScoreRect = highScoreReader.get_rect()
+        highScoreRect.center = (460, 40)
+        display.blit(highScoreReader, highScoreRect)
 
         pygame.draw.rect(display, black, [0, groundHeight, width, 20])
 
         clock.tick(30)
         pygame.display.update()
 if __name__ == '__main__':
-    main()
+    main(highScore)
