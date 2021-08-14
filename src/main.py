@@ -1,9 +1,9 @@
 import pygame, random
 from dinosaur import Dinosaur
-import tkinter.messagebox
 from Cactus import Cactus
 from bird import Bird
 from points import points as pointFunc
+
 pygame.init()
 
 size = width, height = 640, 480
@@ -26,24 +26,26 @@ white = 255, 255, 255
 
 clock = pygame.time.Clock()
 obstacles = []
-highScore = 0
 
-root = tkinter.Tk()
-root.withdraw()
-def main(highScore):
-    score = 0
-    gameSpeed = 15
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                quit()
+
+class game:
+    def __init__(self,highScore):
+        self.highScore = highScore
+        self.reward = 0
+        self.gameOver = False
+        self.score = 0
+
+        def playing(action):
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
 
         display.fill(white)
-        userInput = pygame.key.get_pressed()
+        #userInput = pygame.key.get_pressed()
 
         dinosaur.draw(display)
-        dinosaur.update(userInput)
+        dinosaur.update(action)
 
         if len(obstacles) == 0:
             randomNumber = random.randint(0,1)
@@ -56,11 +58,14 @@ def main(highScore):
             obstacle.draw(display)
             obstacle.update(gameSpeed,obstacles)
             if dinosaur.dinoRect.colliderect(obstacle.imageRect):
+                reward -= 10
+                gameOver = True
                 if score > highScore:
                     highScore = score
-                main(highScore)
+                game(highScore,action)
 
-        score = pointFunc(score, gameSpeed)[0]
+        score = pointFunc(score, gameSpeed,reward)[0]
+        reward = score
         font = pygame.font.SysFont(None, 24)
         scoreReader = font.render(f"Score: {score}", True, (0, 0, 0))
         scoreRect = scoreReader.get_rect()
@@ -75,5 +80,3 @@ def main(highScore):
 
         clock.tick(30)
         pygame.display.update()
-if __name__ == '__main__':
-    main(highScore)
