@@ -7,7 +7,6 @@ from points import points as pointFunc
 pygame.init()
 
 size = width, height = 640, 480
-display = pygame.display.set_mode(size)
 
 groundHeight = height - 100
 dinosaur = Dinosaur(groundHeight)
@@ -34,49 +33,51 @@ class game:
         self.reward = 0
         self.gameOver = False
         self.score = 0
+        self.display = pygame.display.set_mode(size)
 
-        def playing(action):
+
+        def playing(self,action):
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     quit()
 
-        display.fill(white)
-        #userInput = pygame.key.get_pressed()
+            self.display.fill(white)
+            #userInput = pygame.key.get_pressed()
 
-        dinosaur.draw(display)
-        dinosaur.update(action)
+            dinosaur.draw(self.display)
+            dinosaur.update(action)
 
-        if len(obstacles) == 0:
-            randomNumber = random.randint(0,1)
-            if randomNumber == 0:
-                obstacles.append(Cactus(cactus))
-            elif randomNumber == 1:
-                obstacles.append(Bird(bird))
+            if len(obstacles) == 0:
+                randomNumber = random.randint(0,1)
+                if randomNumber == 0:
+                    obstacles.append(Cactus(cactus))
+                elif randomNumber == 1:
+                    obstacles.append(Bird(bird))
 
-        for obstacle in obstacles:
-            obstacle.draw(display)
-            obstacle.update(gameSpeed,obstacles)
-            if dinosaur.dinoRect.colliderect(obstacle.imageRect):
-                reward -= 10
-                gameOver = True
-                if score > highScore:
-                    highScore = score
-                game(highScore,action)
+            for obstacle in obstacles:
+                obstacle.draw(self.display)
+                obstacle.update(obstacles)
+                if dinosaur.dinoRect.colliderect(obstacle.imageRect):
+                    self.reward -= 10
+                    self.gameOver = True
+                    if self.score > self.highScore:
+                        self.highScore = self.score
+                    game(self.highScore)
 
-        score = pointFunc(score, gameSpeed,reward)[0]
-        reward = score
-        font = pygame.font.SysFont(None, 24)
-        scoreReader = font.render(f"Score: {score}", True, (0, 0, 0))
-        scoreRect = scoreReader.get_rect()
-        scoreRect.center = (550, 40)
-        display.blit(scoreReader, scoreRect)
-        highScoreReader = font.render(f"High: {highScore}", True, (0, 0, 0))
-        highScoreRect = highScoreReader.get_rect()
-        highScoreRect.center = (460, 40)
-        display.blit(highScoreReader, highScoreRect)
+            score = pointFunc(self.score,self.reward)[0]
+            reward = score
+            font = pygame.font.SysFont(None, 24)
+            scoreReader = font.render(f"Score: {score}", True, (0, 0, 0))
+            scoreRect = scoreReader.get_rect()
+            scoreRect.center = (550, 40)
+            self.display.blit(scoreReader, scoreRect)
+            highScoreReader = font.render(f"High: {highScore}", True, (0, 0, 0))
+            highScoreRect = highScoreReader.get_rect()
+            highScoreRect.center = (460, 40)
+            self.display.blit(highScoreReader, highScoreRect)
 
-        pygame.draw.rect(display, black, [0, groundHeight, width, 20])
+            pygame.draw.rect(self.display, black, [0, groundHeight, width, 20])
 
-        clock.tick(30)
-        pygame.display.update()
+            clock.tick(30)
+            pygame.display.update()

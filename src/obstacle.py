@@ -6,8 +6,7 @@ class Obstacle:
         self.imageRect = self.image.get_rect()
         self.imageRect.x = screenWidth
 
-    def update(self,gameSpeed,obstacles):
-        self.imageRect.x -= gameSpeed
+    def update(self,obstacles):
         if self.imageRect.x < -screenWidth:
             obstacles.pop()
     def draw(self,display):
